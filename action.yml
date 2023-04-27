@@ -8,21 +8,22 @@ branding:
 runs:
   using: composite
   steps:
-    - uses: actions/checkout@v3
-
     - name: Update local toolchain
       id: update-toolchain
       uses: dtolnay/rust-toolchain@stable
+      shell: bash
 
     - name: Toolchain info
       run: |
         cargo --version
         rustc --version
+      shell: bash
 
     - name: Get Rye commit hash
       id: rye-commit-hash
       run: |
         echo "::set-output name=hash::$(git ls-remote https://github.com/mitsuhiko/rye.git HEAD | cut -f 1)"
+      shell: bash
 
     - name: Set up Rye cache
       uses: actions/cache@v3.3.1
@@ -30,10 +31,12 @@ runs:
       with:
         path: ~/.cargo/bin/rye
         key: rye-cargo-${{ runner.os }}-stable-${{ steps.rye-commit-hash.outputs.hash }}
+      shell: bash
 
     - name: Install Rye
       if: steps.rye-cache.outputs.cache-hit != 'true'
       run: cargo install --git https://github.com/mitsuhiko/rye rye
+      shell: bash
 
     - name: Set Rye commit hash output
       run: echo "::set-output name=rye_commit_hash::${{ steps.rye-commit-hash.outputs.hash }}"
