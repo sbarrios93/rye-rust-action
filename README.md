@@ -1,9 +1,6 @@
 # Rye Installer for Python GitHub Action
 
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/sbarrios93/rye-rust-action/CI?style=for-the-badge)
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/sbarrios93/rye-rust-action?style=for-the-badge)
-
-This GitHub Action allows you to install [Rye Project Manager](https://github.com/mitsuhiko/rye) on your GitHub Actions runner.
+This GitHub Action allows you to install [Rye](https://github.com/mitsuhiko/rye) on your GitHub Actions runner.
 
 ## Table of Contents
 
