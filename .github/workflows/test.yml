@@ -1,0 +1,28 @@
+name: Rye Installer for Python Test
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [macos-latest, ubuntu-latest]
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Install Rye
+      uses: ./
+      id: rye-installer
+
+    - name: Show Rye version
+      run: |
+        echo "Installed Rye commit hash: ${{ steps.rye-installer.outputs.rye_commit_hash }}"
+        rye --version
+
+    - name: Init Rye
+      run: |
+        rye --help
+

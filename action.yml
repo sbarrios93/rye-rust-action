@@ -1,0 +1,45 @@
+name: Rye Installer for Python
+author: sbarrios93
+description: |
+  This action allows you to install Rye Project Manager on your GitHub Actions runner. (https://github.com/mitsuhiko/rye)
+branding:
+  icon: "truck"
+  color: "purple"
+runs:
+  using: composite
+  steps:
+    - uses: actions/checkout@v3
+
+    - name: Update local toolchain
+      id: update-toolchain
+      uses: dtolnay/rust-toolchain@stable
+
+    - name: Toolchain info
+      run: |
+        cargo --version
+        rustc --version
+
+    - name: Get Rye commit hash
+      id: rye-commit-hash
+      run: |
+        echo "::set-output name=hash::$(git ls-remote https://github.com/mitsuhiko/rye.git HEAD | cut -f 1)"
+
+    - name: Set up Rye cache
+      uses: actions/cache@v3.3.1
+      id: rye-cache
+      with:
+        path: ~/.cargo/bin/rye
+        key: rye-cargo-${{ runner.os }}-stable-${{ steps.rye-commit-hash.outputs.hash }}
+
+    - name: Install Rye
+      if: steps.rye-cache.outputs.cache-hit != 'true'
+      run: cargo install --git https://github.com/mitsuhiko/rye rye
+
+    - name: Set Rye commit hash output
+      run: echo "::set-output name=rye_commit_hash::${{ steps.rye-commit-hash.outputs.hash }}"
+      shell: bash
+      id: set-output
+outputs:
+  rye_commit_hash:
+    description: The commit hash of the installed Rye version.
+    value: ${{ steps.set-output.outputs.rye_commit_hash }}
